@@ -2,107 +2,137 @@
 #include <fstream>
 #include <string>
 
+// ПРОГРАММА РАБОТАЕТ ТОЛЬКО ПРИ ТАКОМ ЖЕ МАКЕТЕ (КОЛИЧЕВСТВО СТОЛБЦОВ РАВНА = 23), ДАННОГО ФАЙЛА
+
 using namespace std;
 #define CELLSY_MATRIX 35
 #define CELLSX_MATRIX 126
-#define CELLS_ARRAY 7703
 #define NUM_START 45
-#define NUM1 22
-#define NUM2 1150
-#define NUM3 46
-#define NUM4 64
-#define NUM5 1082
-#define NUM6 1100
+#define DIGIT_STUDENT 22 // Число, по которому мы переходим на на другую строчку файла (РАБОТАЕТ ТОЛЬКО ПРИ КОЛИЧЕВСТВЕ СТОЛБЦОВ В ИСХОДНОМ ФАЙЛЕ РАВНОМУ = 23!!!)
+#define COUNT_EL 1150 // Произведение колчевства строк и столбцов в первом симестре (23 * 50 = 1150), если кратко - количевство элементов
+#define BEGIN_ESS 46 // Номер первой оценки первого ученика
+#define END_ESS 64 // Номер последней оценки первого ученика
+#define BEGIN_TR 1082 // Число, по которому мы переходим на следующий триместр, первую оценку первого ученика 
+#define END_TR 1100 // Число, по которому мы переходим на следующий риместр, последнюю оценку первого ученика
 
-
-int main() {
+int main(int argc, char* argv[]) {
+    // Начало
     setlocale(LC_ALL, "ru");
-    // Начало, Инициализация Операндов, Открываем Исходный Файл
-    string a, path;
-    int count = 0;
+    if (argc > 1)// если передаем аргументы, то argc будет больше 1(в зависимости от кол-ва аргументов)
+    {
+        cout << argv[1] << endl; // вывод второй строки из массива указателей на строки(нумерация в строках начинается с 0 )
 
-    cout << "Введите ПОЛНЫЙ путь к файлу: ";
-    getline(cin, path);
-    cout << endl;
+        
+    }
+    else
+    {
+        cout << "Отсутствует Аргумент" << endl << endl;
 
-    ifstream file(path, ifstream::in);
-    ofstream file2("C:\\Algebra\\AlgebraC.csv", ofstream::out);
-
-    if (file.is_open()) cout << "Файл Один был успешно открыт\n\n";
-    else cout << "Что-то пошло не так. Файл не был открыт\n";
-
-    if (file2.is_open()) cout << "Файл Два был успешно открыт\n\n";
-    else cout << "Что-то пошло не так. Файл не был открыт\n";
+        system("pause");
+        return 0;
+    }
     //...............//
 
+    // Инициализация Операндов, Открываем Исходный Файл
+    string a, path = argv[1], b = argv[1], c = "\b\b\b\b";
+    int count = 0, count1 = 0;
+    string d 
+    string path2 = d + ".MOD.csv";
 
-    // Перепись Исходного Файла в Массив
-    string array[CELLS_ARRAY];
-    for (int i = 0; !file.eof(); i++) {
+    // C:\\Users\student\Documents\Algebra.csv
+
+    ifstream file(path, ifstream::in);
+    ofstream file2(path2, ofstream::out);
+  
+    if (file.is_open()) cout << "Файл Один был успешно открыт\n\n";
+    else cout << "Что-то пошло не так. Файл не был открыт\n\n";
+
+    if (file2.is_open()) cout << "Файл Два был успешно открыт\n\n";
+    else cout << "Что-то пошло не так. Файл не был открыт\n\n";
+    //...............//
+    
+    // Находим Размер Будущего Массива
+    while (!file.eof()) {
         a = "";
         getline(file, a, ';');
 
-        array[i] = a;
+        count1++;
     }
     //...............//
 
     file.close();
+    ifstream file3(path, ifstream::in);
+   
+    // Заполянем Массив Исходным Файлом
+    string* Array = new string[count1]{};
+
+    for (int i = 0; !file3.eof(); i++) {
+        a = "";
+        getline(file3, a, ';');
+
+        Array[i] = a;
+    }
+    //...............//
+
+    file3.close();
 
     // Находим Количевство Искохдного ФИО
-    for (int i = 0, n = 0; i < NUM2; i++) {
+    for (int i = 0, n = 0; i < COUNT_EL; i++) {
         a = "";
-        a = array[i];
+        a = Array[i];
 
         if (i == (NUM_START + n) && a != "") {
             count++;
-            n += NUM1;
+            n += DIGIT_STUDENT;
         }
     }
-
-    cout << endl;
-    cout << count << endl << endl;
     //...............//
 
 
-    // Создаём Динамический Массив, Вносим в Него ФИО
-    string* array1 = new string[count]{};
+    // Создаём Динамический Массив, Заполняем Его ФИО
+    string* Array1 = new string[count]{};
 
-    for (int i = 0, n = 0, f = 0; i < NUM2; i++) {
+    for (int i = 0, n = 0, f = 0; i < COUNT_EL; i++) {
         a = "";
-        a = array[i];
+        a = Array[i];
 
         if (i == (NUM_START + n) && a != "") {
-            array1[f] = array[i];
-            n += NUM1;
+            Array1[f] = Array[i];
+            n += DIGIT_STUDENT;
             f++;
         }
     }
     //...............//
-
-
+    
     // Создание Матрицы для Оценок
-    int Matrix[CELLSY_MATRIX][CELLSX_MATRIX];
+    int** Matrix = new int *[count];
 
-    for (int j = 0, r = 0; j < CELLSY_MATRIX; j++, r += NUM1) {
-        for (int i = (NUM3 + r), m = 0, f = 0; m < CELLSX_MATRIX; i++, m++) {
-            if (i == (NUM4 + r) + f) {
-                i += NUM5;
-                f += NUM6;
+    for (int i = 0; i < count; i++) {
+        Matrix[i] = new int[CELLSX_MATRIX];
+    }
+    //...............//
+    
+    // Заполняем Массив Оценками
+    for (int j = 0, r = 0; j < count; j++, r += DIGIT_STUDENT) {
+        for (int i = (BEGIN_ESS + r), m = 0, f = 0; m < CELLSX_MATRIX; i++, m++) {
+            if (i == (END_ESS + r) + f) {
+                i += BEGIN_TR;
+                f += END_TR;
             }
 
-            if (array[i] == "5") {
+            if (Array[i] == "5") {
                 Matrix[j][m] = 5;
             }
-            else if (array[i] == "4") {
+            else if (Array[i] == "4") {
                 Matrix[j][m] = 4;
             }
-            else if (array[i] == "3") {
+            else if (Array[i] == "3") {
                 Matrix[j][m] = 3;
             }
-            else if (array[i] == "2") {
+            else if (Array[i] == "2") {
                 Matrix[j][m] = 2;
             }
-            else if (array[i] == "") {
+            else if (Array[i] == "") {
                 Matrix[j][m] = 0;
             }
             else {
@@ -112,10 +142,9 @@ int main() {
     }
     //...............//
 
-
     // В Новый Файл Вписаваем ФИО, а Потом Соответствено Оценки
-    for (int j = 0; j < CELLSY_MATRIX; j++) {
-        file2 << array1[j] << ";";
+    for (int j = 0; j < count; j++) {
+        file2 << Array1[j] << ";";
 
         for (int i = 0; i < CELLSX_MATRIX; i++) {
             file2 << Matrix[j][i] << ";";
@@ -126,7 +155,9 @@ int main() {
     //...............//
 
     file2.close();
-    delete [] array1;
-
+    delete[] Array;
+    delete[] Array1;
+    delete[] Matrix;
+    system("pause");
     return 0;
 }
