@@ -17,26 +17,23 @@ using namespace std;
 
 int main() {
     setlocale(LC_ALL, "ru");
-
-
-
     // Начало, Инициализация Операндов, Открываем Исходный Файл
-    string a, path = "C:\\Users\\student\\Documents\\Algebra.csv";
+    string a, path;
     int count = 0;
 
-    /*
     cout << "Введите ПОЛНЫЙ путь к файлу: ";
-    cin >> path;
+    getline(cin, path);
     cout << endl;
-    */
 
     ifstream file(path, ifstream::in);
-    ofstream file2("C:\\Users\\student\\Documents\\AlgebraC.csv", ofstream::out);
+    ofstream file2("C:\\Algebra\\AlgebraC.csv", ofstream::out);
 
-    if (file2.is_open()) cout << "Файл был успешно открыт\n\n";
+    if (file.is_open()) cout << "Файл Один был успешно открыт\n\n";
+    else cout << "Что-то пошло не так. Файл не был открыт\n";
+
+    if (file2.is_open()) cout << "Файл Два был успешно открыт\n\n";
     else cout << "Что-то пошло не так. Файл не был открыт\n";
     //...............//
-
 
 
     // Перепись Исходного Файла в Массив
@@ -67,7 +64,6 @@ int main() {
     //...............//
 
 
-
     // Создаём Динамический Массив, Вносим в Него ФИО
     string* array1 = new string[count]{};
 
@@ -82,7 +78,6 @@ int main() {
         }
     }
     //...............//
-
 
 
     // Создание Матрицы для Оценок
@@ -117,7 +112,6 @@ int main() {
     }
     //...............//
 
-    
 
     // В Новый Файл Вписаваем ФИО, а Потом Соответствено Оценки
     for (int j = 0; j < CELLSY_MATRIX; j++) {
