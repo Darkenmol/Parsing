@@ -3,28 +3,44 @@
 #include <string>
 
 using namespace std;
+#define CELLSY_MATRIX 35
+#define CELLSX_MATRIX 126
+#define CELLS_ARRAY 7703
+#define NUM_START 45
+#define NUM1 22
+#define NUM2 1150
+#define NUM3 46
+#define NUM4 64
+#define NUM5 1082
+#define NUM6 1100
+
 
 int main() {
     setlocale(LC_ALL, "ru");
+
+
+
     // Начало, Инициализация Операндов, Открываем Исходный Файл
-    string a, path = "D:\\Test\\Algebra.csv";
+    string a, path = "C:\\Users\\student\\Documents\\Algebra.csv";
     int count = 0;
+
     /*
-    cout << "Введите ПОЛНЫЙ путь к файлу";
-    cin >> a;
+    cout << "Введите ПОЛНЫЙ путь к файлу: ";
+    cin >> path;
     cout << endl;
     */
 
     ifstream file(path, ifstream::in);
+    ofstream file2("C:\\Users\\student\\Documents\\AlgebraC.csv", ofstream::out);
 
-    if (file.is_open()) cout << "Файл был успешно открыт\n";
+    if (file2.is_open()) cout << "Файл был успешно открыт\n\n";
     else cout << "Что-то пошло не так. Файл не был открыт\n";
     //...............//
 
 
 
     // Перепись Исходного Файла в Массив
-    string array[7703];
+    string array[CELLS_ARRAY];
     for (int i = 0; !file.eof(); i++) {
         a = "";
         getline(file, a, ';');
@@ -36,31 +52,32 @@ int main() {
     file.close();
 
     // Находим Количевство Искохдного ФИО
-    for (int i = 0, n = 0; i < 1150; i++) {
+    for (int i = 0, n = 0; i < NUM2; i++) {
         a = "";
         a = array[i];
 
-        if (i == (45 + n) && a != "") {
+        if (i == (NUM_START + n) && a != "") {
             count++;
-            n += 22;
+            n += NUM1;
         }
     }
 
-    cout << count << endl;
+    cout << endl;
+    cout << count << endl << endl;
     //...............//
 
 
 
     // Создаём Динамический Массив, Вносим в Него ФИО
-    string *array1 = new string[count] {};
+    string* array1 = new string[count]{};
 
-    for (int i = 0, n = 0, f = 0; i < 1150; i++) {
+    for (int i = 0, n = 0, f = 0; i < NUM2; i++) {
         a = "";
         a = array[i];
 
-        if (i == (45 + n) && a != "") {
+        if (i == (NUM_START + n) && a != "") {
             array1[f] = array[i];
-            n += 22;
+            n += NUM1;
             f++;
         }
     }
@@ -69,38 +86,53 @@ int main() {
 
 
     // Создание Матрицы для Оценок
-    int Matrix[1][126];
+    int Matrix[CELLSY_MATRIX][CELLSX_MATRIX];
 
-    for (int i = 46, n = 0, m = 0, f = 0; i < 7704; i++, m++) {
-        if (i == (65 + f)) {
-            i += 1082;
-            f += 1100;
-        }
+    for (int j = 0, r = 0; j < CELLSY_MATRIX; j++, r += NUM1) {
+        for (int i = (NUM3 + r), m = 0, f = 0; m < CELLSX_MATRIX; i++, m++) {
+            if (i == (NUM4 + r) + f) {
+                i += NUM5;
+                f += NUM6;
+            }
 
-        if (array[i] == "5") {
-            Matrix[n][m] = 5;
+            if (array[i] == "5") {
+                Matrix[j][m] = 5;
+            }
+            else if (array[i] == "4") {
+                Matrix[j][m] = 4;
+            }
+            else if (array[i] == "3") {
+                Matrix[j][m] = 3;
+            }
+            else if (array[i] == "2") {
+                Matrix[j][m] = 2;
+            }
+            else if (array[i] == "") {
+                Matrix[j][m] = 0;
+            }
+            else {
+                Matrix[j][m] = -1;
+            }
         }
-        else if (array[i] == "4") {
-            Matrix[n][m] = 4;
-        }
-        else if (array[i] == "3") {
-            Matrix[n][m] = 3;
-        }
-        else if (array[i] == "2") {
-            Matrix[n][m] = 2;
-        }
-        else if (array[i] == "") {
-            Matrix[n][m] = 0;
-        }
-        else {
-            Matrix[n][m] = -1;
-        }
-    }
-
-    for (int j = 0; j < 126; j++) {
-        cout << Matrix[0][j] << "\n";
     }
     //...............//
+
+    
+
+    // В Новый Файл Вписаваем ФИО, а Потом Соответствено Оценки
+    for (int j = 0; j < CELLSY_MATRIX; j++) {
+        file2 << array1[j] << ";";
+
+        for (int i = 0; i < CELLSX_MATRIX; i++) {
+            file2 << Matrix[j][i] << ";";
+        }
+
+        file2 << endl;
+    }
+    //...............//
+
+    file2.close();
+    delete [] array1;
 
     return 0;
 }
