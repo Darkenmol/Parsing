@@ -1,2 +1,2 @@
 # Parsing
-Parsing XLSX Exel tabble.
+Parsing CSV Exel tabble.
